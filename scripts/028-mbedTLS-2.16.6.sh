@@ -57,36 +57,40 @@ export NM=${TOOLCHAIN_PATH}nm
 export CXXCPP=${TOOLCHAIN_PATH}cpp
 export RANLIB=${TOOLCHAIN_PATH}ranlib
 export LDFLAGS="-L$PS3DEV/ppu/powerpc64-ps3-elf/lib -L$PSL1GHT/ppu/lib -L$PS3DEV/portlibs/ppu/lib -lrt -llv2"
-export CFLAGS="-I${CURRENTPATH}/mbedtls-${VERSION}/include -I$PS3DEV/ppu/powerpc64-ps3-elf/include -I$PSL1GHT/ppu/include -I$PS3DEV/portlibs/ppu/include -mcpu=cell \
-	-DMBEDTLS_KEY_EXCHANGE_RSA_ENABLED \
-	-DMBEDTLS_KEY_EXCHANGE_PSK_ENABLED \
-	-DMBEDTLS_KEY_EXCHANGE_RSA_PSK_ENABLED \
-	-DMBEDTLS_KEY_EXCHANGE_DHE_PSK_ENABLED \
-	-DMBEDTLS_KEY_EXCHANGE_DHE_RSA_ENABLED \
-	-DMBEDTLS_KEY_EXCHANGE_ECDH_RSA_ENABLED \
-	-DMBEDTLS_KEY_EXCHANGE_ECDH_ECDSA_ENABLED \
-	-DMBEDTLS_KEY_EXCHANGE_ECDHE_RSA_ENABLED \
-	-DMBEDTLS_KEY_EXCHANGE_ECDHE_PSK_ENABLED \
-	-DMBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED \
-	-DMBEDTLS_KEY_EXCHANGE_ECJPAKE_ENABLED \
-	-DMBEDTLS_SSL_PROTO_DTLS \
-	-DMBEDTLS_SSL_PROTO_SSL3 \
-	-DMBEDTLS_SSL_PROTO_TLS1 \
-	-DMBEDTLS_SSL_PROTO_TLS1_1 \
-	-DMBEDTLS_SSL_PROTO_TLS1_2 \
-	-DMBEDTLS_SHA1_C \
-	-DMBEDTLS_MD5_C \
-	-DMBEDTLS_DHM_C \
-	-DMBEDTLS_ECDH_C \
-	-DMBEDTLS_ECJPAKE_C \
-	-DMBEDTLS_SSL_CLI_C \
-	-DMBEDTLS_SSL_SRV_C \
-	-DMBEDTLS_SSL_TLS_C \
-	"
+export CFLAGS="-I${CURRENTPATH}/mbedtls-${VERSION}/include -I$PS3DEV/ppu/powerpc64-ps3-elf/include -I$PSL1GHT/ppu/include -I$PS3DEV/portlibs/ppu/include -mcpu=cell"
 export MBEDTLS_NO_PLATFORM_ENTROPY=1
 
+## Create config.h file
 cd library
+sed -i.bak '94d' ../configs/config-no-entropy.h
+sed -i.bak '92d' ../configs/config-no-entropy.h
 cp ../configs/config-no-entropy.h ../include/mbedtls/config.h
+echo "#define MBEDTLS_KEY_EXCHANGE_RSA_ENABLED" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_KEY_EXCHANGE_PSK_ENABLED" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_KEY_EXCHANGE_RSA_PSK_ENABLED" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_KEY_EXCHANGE_DHE_PSK_ENABLED" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_KEY_EXCHANGE_DHE_RSA_ENABLED" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_KEY_EXCHANGE_ECDH_RSA_ENABLED" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_KEY_EXCHANGE_ECDH_ECDSA_ENABLED" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_KEY_EXCHANGE_ECDHE_RSA_ENABLED" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_KEY_EXCHANGE_ECDHE_PSK_ENABLED" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_KEY_EXCHANGE_ECJPAKE_ENABLED" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_SSL_PROTO_DTLS" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_SSL_PROTO_SSL3" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_SSL_PROTO_TLS1" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_SSL_PROTO_TLS1_1" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_SSL_PROTO_TLS1_2" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_SHA1_C" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_MD5_C" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_DHM_C" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_ECDH_C" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_ECJPAKE_C" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_SSL_CLI_C" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_SSL_SRV_C" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_SSL_TLS_C" >> ../include/mbedtls/config.h
+echo "\n#include \"check_config.h\"\n" >> ../include/mbedtls/config.h
+echo "#endif /* MBEDTLS_CONFIG_H */" >> ../include/mbedtls/config.h
 
 echo "Build library..."
 ## Compile and install.
