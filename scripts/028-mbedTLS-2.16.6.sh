@@ -65,32 +65,34 @@ cd library
 sed -i.bak '94d' ../configs/config-no-entropy.h
 sed -i.bak '92d' ../configs/config-no-entropy.h
 cp ../configs/config-no-entropy.h ../include/mbedtls/config.h
-echo "#define MBEDTLS_KEY_EXCHANGE_RSA_ENABLED" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_KEY_EXCHANGE_PSK_ENABLED" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_KEY_EXCHANGE_RSA_PSK_ENABLED" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_KEY_EXCHANGE_DHE_PSK_ENABLED" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_KEY_EXCHANGE_DHE_RSA_ENABLED" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_KEY_EXCHANGE_ECDH_RSA_ENABLED" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_KEY_EXCHANGE_ECDH_ECDSA_ENABLED" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_KEY_EXCHANGE_ECDHE_RSA_ENABLED" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_KEY_EXCHANGE_ECDHE_PSK_ENABLED" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_KEY_EXCHANGE_ECJPAKE_ENABLED" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_SSL_PROTO_DTLS" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_SSL_PROTO_SSL3" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_SSL_PROTO_TLS1" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_SSL_PROTO_TLS1_1" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_SSL_PROTO_TLS1_2" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_SHA1_C" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_MD5_C" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_DHM_C" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_ECDH_C" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_ECJPAKE_C" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_SSL_CLI_C" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_SSL_SRV_C" >> ../include/mbedtls/config.h
-echo "#define MBEDTLS_SSL_TLS_C" >> ../include/mbedtls/config.h
-echo "\n#include \"check_config.h\"\n" >> ../include/mbedtls/config.h
-echo "#endif /* MBEDTLS_CONFIG_H */" >> ../include/mbedtls/config.h
+echo "#define MBEDTLS_KEY_EXCHANGE_RSA_ENABLED
+#define MBEDTLS_KEY_EXCHANGE_PSK_ENABLED
+#define MBEDTLS_KEY_EXCHANGE_RSA_PSK_ENABLED
+#define MBEDTLS_KEY_EXCHANGE_DHE_PSK_ENABLED
+#define MBEDTLS_KEY_EXCHANGE_DHE_RSA_ENABLED
+#define MBEDTLS_KEY_EXCHANGE_ECDH_RSA_ENABLED
+#define MBEDTLS_KEY_EXCHANGE_ECDH_ECDSA_ENABLED
+#define MBEDTLS_KEY_EXCHANGE_ECDHE_RSA_ENABLED
+#define MBEDTLS_KEY_EXCHANGE_ECDHE_PSK_ENABLED
+#define MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED
+#define MBEDTLS_KEY_EXCHANGE_ECJPAKE_ENABLED
+#define MBEDTLS_SSL_PROTO_DTLS
+#define MBEDTLS_SSL_PROTO_SSL3
+#define MBEDTLS_SSL_PROTO_TLS1
+#define MBEDTLS_SSL_PROTO_TLS1_1
+#define MBEDTLS_SSL_PROTO_TLS1_2
+#define MBEDTLS_SHA1_C
+#define MBEDTLS_MD5_C
+#define MBEDTLS_DHM_C
+#define MBEDTLS_ECDH_C
+#define MBEDTLS_ECJPAKE_C
+#define MBEDTLS_SSL_CLI_C
+#define MBEDTLS_SSL_SRV_C
+#define MBEDTLS_SSL_TLS_C
+
+#include \"check_config.h\"
+
+#endif /* MBEDTLS_CONFIG_H */" >> ../include/mbedtls/config.h
 
 echo "Build library..."
 ## Compile and install.
