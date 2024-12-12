@@ -2,17 +2,13 @@
 # tiff-3.9.4.sh by Jon Limle <jonlimle123@yahoo.com>
 
 ## Download the source code.
-wget --tries 5 --timeout 15 --continue \
-  ftp://ftp.remotesensing.org/pub/libtiff/tiff-3.9.4.tar.gz \
-|| wget --continue \
-  https://github.com/downloads/ps3dev/ps3libraries/tiff-3.9.4.tar.gz
-
+git clone https://github.com/libsdl-org/libtiff/ -b v3.9.4 --depth=1 tiff-3.9.4
 ## Download an up-to-date config.guess and config.sub
 if [ ! -f config.guess ]; then wget --continue http://git.savannah.gnu.org/cgit/config.git/plain/config.guess; fi
 if [ ! -f config.sub ]; then wget --continue http://git.savannah.gnu.org/cgit/config.git/plain/config.sub; fi
 
 ## Unpack the source code.
-rm -Rf tiff-3.9.4 && tar xfvz ./tiff-3.9.4.tar.gz && cd tiff-3.9.4
+cd tiff-3.9.4
 
 ## Replace config.guess and config.sub
 cp ../config.guess ../config.sub config/
