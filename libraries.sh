@@ -1,4 +1,5 @@
 #!/bin/sh
+set -x
 # libraries.sh by Naomi Peori (naomi@peori.ca)
 
 ## Enter the ps3libraries directory.
