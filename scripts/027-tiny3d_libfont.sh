@@ -16,5 +16,5 @@ wget --no-check-certificate https://github.com/wargio/tiny3d/tarball/master -O t
 rm -Rf tiny3d && mkdir tiny3d && tar --strip-components=1 --directory=tiny3d -xvzf tiny3d.tar.gz && cd tiny3d
 
 ## Compile and install.
-${MAKE:-make} install -C lib --no-print-directory
-${MAKE:-make} install -C libfont --no-print-directory
+${MAKE:-make} VERBOSE=1 V=1 install -C lib --no-print-directory
+${MAKE:-make} VERBOSE=1 V=1 install -C libfont --no-print-directory
