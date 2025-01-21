@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh -x
 # mini18n by Yabause team
 #   ported to PS3 by Bucanero
 
