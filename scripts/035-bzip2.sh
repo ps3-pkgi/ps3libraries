@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh -x
 # bzip2 by cadcdev
 
 ## Download the source code.
