@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh -x
 #
 # tar/tar.gz/tar.bz2 library by Bucanero
 
