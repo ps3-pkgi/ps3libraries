@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh -x
 # dbglogger by Bucanero
 
 ## Download the source code.
