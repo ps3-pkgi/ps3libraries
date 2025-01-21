@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh -x
 #
 # un7Zip library by Bucanero
 
