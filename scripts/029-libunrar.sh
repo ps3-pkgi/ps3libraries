@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -eo pipefail
-# unRAR library ported to PS3 by Bucanero
+# unRAR 7.1.6 library ported to PS3 (ps3-pkgi)
 
 ## Source util functions
 source ../utils/utils.sh
