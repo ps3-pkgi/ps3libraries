@@ -1,12 +1,21 @@
-#!/bin/sh -x
+#!/usr/bin/env bash
+set -eo pipefail
 # mini18n by Yabause team
 #   ported to PS3 by Bucanero
 
+## Source util functions
+source ../utils/utils.sh
+
 ## Download the source code.
-wget --no-check-certificate https://github.com/bucanero/mini18n/tarball/master -O mini18n.tar.gz 
+../download.sh mini18n.tar.gz
 
 ## Unpack the source code.
-rm -Rf mini18n && mkdir mini18n && tar --strip-components=1 --directory=mini18n -xvzf mini18n.tar.gz && cd mini18n
+rm -Rf mini18n
+mkdir mini18n
+echo "Unpacking mini18n"
+extract ../archives/mini18n.tar.gz --strip-components=1 --directory=mini18n
+cd mini18n
 
 ## Compile and install.
-${MAKE:-make} install
+jobs=$(nproc 2>/dev/null || sysctl -n hw.ncpu)
+${MAKE:-make} -j"$jobs" install

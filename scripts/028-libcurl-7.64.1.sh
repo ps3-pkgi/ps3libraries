@@ -1,20 +1,27 @@
-#!/bin/sh -e
+#!/usr/bin/env bash
+set -eo pipefail
 # libcurl-7.31.0 by KaKaRoTo
 # modified by mhaqs for 7.31.0 release and cpp compatibility
 
-VERSION=7.64.1
-## Download the source code.
-wget --continue http://curl.haxx.se/download/curl-${VERSION}.tar.gz
+VERSION="7.64.1"
 
-## Download an up-to-date config.guess and config.sub
-if [ ! -f config.guess ]; then wget --continue http://git.savannah.gnu.org/cgit/config.git/plain/config.guess; fi
-if [ ! -f config.sub ]; then wget --continue http://git.savannah.gnu.org/cgit/config.git/plain/config.sub; fi
+## Source util functions
+source ../utils/utils.sh
+
+## Download the source code.
+../download.sh curl-${VERSION}.tar.gz
+
+## Fetch config.guess and config.sub, falling back to copies if Savannah is unavailable
+../config/get-config-scripts.sh
 
 ## Unpack the source code.
-rm -Rf curl-${VERSION} && tar xfvz curl-${VERSION}.tar.gz && cd curl-${VERSION}
+rm -Rf curl-${VERSION}
+echo "Unpacking curl-${VERSION}"
+extract ../archives/curl-${VERSION}.tar.gz
+cd curl-${VERSION}
 
 ## Replace config.guess and config.sub
-cp ../config.guess ../config.sub .
+cp ../../archives/config.guess ../../archives/config.sub .
 
 ## Create the build directory.
 mkdir build-ppu && cd build-ppu
@@ -27,8 +34,9 @@ AR="ppu-ar" CC="ppu-gcc" RANLIB="ppu-ranlib" \
   LDFLAGS="-L$PSL1GHT/ppu/lib -L$PS3DEV/portlibs/ppu/lib" LIBS="-lnet -lsysutil -lsysmodule -lm " \
   PKG_CONFIG_LIBDIR="$PSL1GHT/ppu/lib/pkgconfig" PKG_CONFIG_PATH="$PS3DEV/portlibs/ppu/lib/pkgconfig" \
      ../configure   --prefix="$PS3DEV/portlibs/ppu"  --host="powerpc64-ps3-elf"  \
-          --disable-threaded-resolver --disable-ipv6 \
-          --includedir="$PS3DEV/portlibs/ppu/include"   --libdir="$PS3DEV/portlibs/ppu/lib" --without-ssl --with-polarssl="$PS3DEV/portlibs/ppu/include/polarssl" --with-ca-bundle="/usr/ssl/certs/ca-bundle.crt"
+          --disable-threaded-resolver --disable-ipv6 --disable-ntlm-wb \
+          --includedir="$PS3DEV/portlibs/ppu/include" --libdir="$PS3DEV/portlibs/ppu/lib" --with-mbedtls="$PS3DEV/portlibs/ppu/include/mbedtls" --with-ca-bundle="/usr/ssl/certs/ca-bundle.crt"
 
 ## Compile and install.
-${MAKE:-make} -j4 && ${MAKE:-make} install
+jobs=$(nproc 2>/dev/null || sysctl -n hw.ncpu)
+${MAKE:-make} -j"$jobs" && ${MAKE:-make} -j"$jobs" install

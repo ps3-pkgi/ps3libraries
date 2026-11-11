@@ -1,12 +1,21 @@
-#!/bin/sh -x
+#!/usr/bin/env bash
+set -eo pipefail
 # libansilove by Stefan Vogt, Brian Cassidy, and Frederic Cambus
 #   ported to PS3 by Bucanero
 
+## Source util functions
+source ../utils/utils.sh
+
 ## Download the source code.
-wget --no-check-certificate https://github.com/bucanero/libansilove/tarball/master -O libansilove.tar.gz 
+../download.sh libansilove.tar.gz
 
 ## Unpack the source code.
-rm -Rf libansilove && mkdir libansilove && tar --strip-components=1 --directory=libansilove -xvzf libansilove.tar.gz && cd libansilove
+rm -Rf libansilove
+mkdir libansilove
+echo "Unpacking libansilove"
+extract ../archives/libansilove.tar.gz --strip-components=1 --directory=libansilove
+cd libansilove
 
 ## Compile and install.
-${MAKE:-make} install
+jobs=$(nproc 2>/dev/null || sysctl -n hw.ncpu)
+${MAKE:-make} -j"$jobs" install

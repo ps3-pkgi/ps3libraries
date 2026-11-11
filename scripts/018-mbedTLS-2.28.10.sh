@@ -1,5 +1,5 @@
-#!/bin/sh -e
-
+#!/usr/bin/env bash
+set -eo pipefail
 # Update by Damian Parrino (2020-07-29)
 # Automatic build script for mbedTLS
 # for PSL1GHT, PlayStation 3 open source SDK.
@@ -23,7 +23,7 @@
 ###########################################################################
 # Change values here
 #
-VERSION="2.16.6"
+VERSION="2.28.10"
 #
 ###########################################################################
 #
@@ -33,16 +33,22 @@ CURRENTPATH=`pwd`
 ARCH="powerpc64"
 PLATFORM="PS3"
 
+## Source util functions
+source ../utils/utils.sh
+
 ## Download the source code.
-git clone https://github.com/Mbed-TLS/mbedtls -b mbedtls-2.16.6 --depth=1 mbedtls-${VERSION}
+../download.sh mbedtls-${VERSION}.tar.bz2
 
 ## Unpack the source code.
+rm -Rf mbedtls-${VERSION}
+echo "Unpacking mbedtls-${VERSION}"
+extract ../archives/mbedtls-${VERSION}.tar.bz2
 cd mbedtls-${VERSION}
 
 echo "Building mbedTLS ${VERSION} for ${PLATFORM} ${ARCH}"
 
 echo "Patching Makefile..."
-sed -i.bak '4d' ${CURRENTPATH}/mbedtls-${VERSION}/library/Makefile
+patch -p1 < ../../patches/mbedtls-${VERSION}.patch
 
 echo "Please stand by..."
 
@@ -57,46 +63,13 @@ export NM=${TOOLCHAIN_PATH}nm
 export CXXCPP=${TOOLCHAIN_PATH}cpp
 export RANLIB=${TOOLCHAIN_PATH}ranlib
 export LDFLAGS="-L$PS3DEV/ppu/powerpc64-ps3-elf/lib -L$PSL1GHT/ppu/lib -L$PS3DEV/portlibs/ppu/lib -lrt -llv2"
-export CFLAGS="-I${CURRENTPATH}/mbedtls-${VERSION}/include -I$PS3DEV/ppu/powerpc64-ps3-elf/include -I$PSL1GHT/ppu/include -I$PS3DEV/portlibs/ppu/include -mcpu=cell"
-export MBEDTLS_NO_PLATFORM_ENTROPY=1
-
-## Create config.h file
-cd library
-sed -i.bak '94d' ../configs/config-no-entropy.h
-sed -i.bak '92d' ../configs/config-no-entropy.h
-cp ../configs/config-no-entropy.h ../include/mbedtls/config.h
-echo "#define MBEDTLS_KEY_EXCHANGE_RSA_ENABLED
-#define MBEDTLS_KEY_EXCHANGE_PSK_ENABLED
-#define MBEDTLS_KEY_EXCHANGE_RSA_PSK_ENABLED
-#define MBEDTLS_KEY_EXCHANGE_DHE_PSK_ENABLED
-#define MBEDTLS_KEY_EXCHANGE_DHE_RSA_ENABLED
-#define MBEDTLS_KEY_EXCHANGE_ECDH_RSA_ENABLED
-#define MBEDTLS_KEY_EXCHANGE_ECDH_ECDSA_ENABLED
-#define MBEDTLS_KEY_EXCHANGE_ECDHE_RSA_ENABLED
-#define MBEDTLS_KEY_EXCHANGE_ECDHE_PSK_ENABLED
-#define MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED
-#define MBEDTLS_KEY_EXCHANGE_ECJPAKE_ENABLED
-#define MBEDTLS_SSL_PROTO_DTLS
-#define MBEDTLS_SSL_PROTO_SSL3
-#define MBEDTLS_SSL_PROTO_TLS1
-#define MBEDTLS_SSL_PROTO_TLS1_1
-#define MBEDTLS_SSL_PROTO_TLS1_2
-#define MBEDTLS_SHA1_C
-#define MBEDTLS_MD5_C
-#define MBEDTLS_DHM_C
-#define MBEDTLS_ECDH_C
-#define MBEDTLS_ECJPAKE_C
-#define MBEDTLS_SSL_CLI_C
-#define MBEDTLS_SSL_SRV_C
-#define MBEDTLS_SSL_TLS_C
-
-#include \"check_config.h\"
-
-#endif /* MBEDTLS_CONFIG_H */" >> ../include/mbedtls/config.h
+export CFLAGS="-I../include -I$PS3DEV/ppu/powerpc64-ps3-elf/include -I$PSL1GHT/ppu/include -I$PS3DEV/portlibs/ppu/include -mcpu=cell"
 
 echo "Build library..."
 ## Compile and install.
-${MAKE:-make}
+cd library
+jobs=$(nproc 2>/dev/null || sysctl -n hw.ncpu)
+${MAKE:-make} -j"$jobs"
 
 cp lib*.a $PS3DEV/portlibs/ppu/lib/
 cp -R ../include/mbedtls $PS3DEV/portlibs/ppu/include/
