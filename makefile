@@ -1,5 +1,7 @@
 IMAGE=hldtux/ps3dev
 
+all: test
+
 test:
 	DOCKER_DEFAULT_PLATFORM=linux/amd64 docker run -i --rm -v "`pwd`:/src" -w /src ${IMAGE} ./libraries.sh
 
